@@ -61,3 +61,9 @@ class ResMLP(nn.Module):
         x = x.transpose(1,2).mean(dim=-1)
         x = self.to_logits(x)
         return x
+
+if __name__ == "__main__":
+    x = flow.tensor(np.random.randn(1, 3, 224, 224), dtype=flow.float32)
+    net = ResMLP(dim=384, depth=3, num_classes=100)
+    print(x.shape)
+    print(net(x).shape)

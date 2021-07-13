@@ -3,7 +3,7 @@ Vision MLP Models Based on OneFlow
 
 ## TODO
 - [x] [Mlp-Mixer]()
-- [ ] [ResMLP]()
+- [x] [ResMLP]()
 - [ ] [gMLP]()
 - [ ] [S2-MLP]()
 - [ ] [Vision-Permutator]()
