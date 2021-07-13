@@ -26,13 +26,13 @@ class PreAffinePostLayerScale(nn.Module):
         else:
             init_eps = 1e-6
 
-        scale = flow.zeros(1, 1, dim).fill_(init_eps)
+        scale = flow.tensor(np.zeros((1, 1, dim)), dtype=flow.float32).fill_(init_eps)
         self.scale = nn.Parameter(scale)
         self.affine = Affine(dim=dim)
         self.fn = fn
 
-    def forward(self, x):
-        return self.fn(self.affine(x)) * self.scale + x
+    def forward(self, x, **kwargs):
+        return self.fn(self.affine(x), **kwargs) * self.scale + x
 
 class ResMLP(nn.Module):
     def __init__(self, *, dim, depth, num_classes, expansion_factor=4, patch_size=16, image_size=224):
@@ -58,6 +58,6 @@ class ResMLP(nn.Module):
         x = x.flatten(2).transpose(1,2)
         x = self.res_mlp_layers(x)
         x = self.affine(x)
-        x = x.tranpose(1,2).mean(dim=1)
+        x = x.transpose(1,2).mean(dim=-1)
         x = self.to_logits(x)
         return x
