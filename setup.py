@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="vision_mlp_oneflow",
-    version="0.0.1",
+    version="0.0.2",
     author="Ren Tianhe",
     author_email="596106517@qq.com",
     description="vision mlp model based on oneflow",
