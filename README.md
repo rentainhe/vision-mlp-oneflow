@@ -6,7 +6,7 @@ Vision MLP Models Based on OneFlow
 - [x] [ResMLP]()
 - [x] [gMLP]()
 - [ ] [S2-MLP]()
-- [ ] [Vision-Permutator]()
+- [x] [Vision-Permutator]()
 
 ## 复现过程中遇到的问题
 - `tensor.chunk()`方法没有和`torch.tensor.chunk()`对齐, 在输入的dim参数为负数的时候未作判断, 并且整体功能还变成了repeat操作
