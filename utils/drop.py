@@ -1,11 +1,9 @@
 from random import randrange
 import oneflow
 import oneflow.F as F
-import oneflow.experimental as flow
-from oneflow.experimental import nn
+import oneflow as flow
+import oneflow.nn as nn
 import random
-# 开启oneflow的eager动态图模式
-flow.enable_eager_execution()
 import numpy as np
 from functools import partial
 
@@ -21,7 +19,7 @@ def drop_path(x, drop_prob: float = 0., training: bool = False):
         return x
     keep_prob = 1 - drop_prob
     shape = (x.shape[0],) + (1,) * (x.ndim - 1)  # work with diff dim tensors, not just 2D ConvNets
-    random_tensor = keep_prob + flow.tensor(np.random.rand(*shape), dtype=x.dtype, device=x.device)
+    random_tensor = keep_prob + flow.tensor(np.random.rand(*shape).astype(np.float32), dtype=x.dtype, device=x.device)
     random_tensor = random_tensor.floor()  # binarize
     output = x.div(keep_prob) * random_tensor
     return output
@@ -38,5 +36,5 @@ class DropPath(nn.Module):
 
 if __name__ == "__main__":
     x = flow.tensor(np.random.randn(16, 16, 512), dtype=flow.float32)
-    D = DropPath(0.1)
-    D(x)
+    D = DropPath(0.9)
+    print(D(x))
