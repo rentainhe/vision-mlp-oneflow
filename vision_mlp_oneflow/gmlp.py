@@ -1,11 +1,9 @@
+import random
 from random import randrange
 import oneflow
 import oneflow.F as F
-import oneflow.experimental as flow
-from oneflow.experimental import nn
-import random
-# 开启oneflow的eager动态图模式
-flow.enable_eager_execution()
+import oneflow as flow
+from oneflow.nn import nn
 import numpy as np
 from functools import partial
 

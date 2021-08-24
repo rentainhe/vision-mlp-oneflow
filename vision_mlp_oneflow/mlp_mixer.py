@@ -1,11 +1,11 @@
-import oneflow
-import oneflow.F as F
-import oneflow.experimental as flow
-from oneflow.experimental import nn
 import random
-# 开启oneflow的eager动态图模式
-flow.enable_eager_execution()
 import numpy as np
+
+import oneflow
+import oneflow as flow
+import oneflow.nn as nn
+import oneflow.F as F
+
 
 class MlpBlock(nn.Module):
     def __init__(self, hidden_dim, mlp_dim):
@@ -54,3 +54,14 @@ class MlpMixer(nn.Module):
         x = x.mean(dim=1)
         x = self.fc(x)
         return x
+
+if __name__ == "__main__":
+    test_data = flow.ones((1, 3, 224, 224))
+    model = MlpMixer(num_classes=1000,
+                     num_blocks=12,
+                     patch_size=16,
+                     hidden_dim=768,
+                     tokens_mlp_dim=384,
+                     channels_mlp_dim=3072,
+                     image_size=224)
+    print(model(test_data).shape)
