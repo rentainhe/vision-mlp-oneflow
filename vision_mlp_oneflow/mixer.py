@@ -12,6 +12,7 @@ from layers.layer_norm import LayerNorm
 from layers.helpers import to_2tuple
 from layers.patch_embed import PatchEmbed
 
+
 # TODO: 在测试单个的mlp-block时，出现了nan
 # test-code
 # test_data = flow.ones((10, 16, 768), dtype=flow.float32)
@@ -41,8 +42,8 @@ class MlpMixer(nn.Module):
             img_size=224,
             in_chans=3,
             patch_size=16,
-            num_blocks=8,
-            embed_dim=512,
+            num_blocks=8,  # depth
+            embed_dim=512,  # hidden dim
             mlp_ratio=(0.5, 4.0),
             block_layer=MixerBlock,
             mlp_layer=Mlp,
@@ -50,7 +51,7 @@ class MlpMixer(nn.Module):
             act_layer=nn.GELU,
             drop_rate=0.,
             drop_path_rate=0.,
-            nlhb=False,
+            nlhb=False,  # not used
             stem_norm=False,
         ):
         super().__init__()
@@ -81,8 +82,45 @@ class MlpMixer(nn.Module):
         x = self.head(x)
         return x
 
+# def _resnet(
+#     arch: str,
+#     block: Type[Union[BasicBlock, Bottleneck]],
+#     layers: List[int],
+#     pretrained: bool,
+#     progress: bool,
+#     **kwargs: Any
+# ) -> ResNet:
+#     model = ResNet(block, layers, **kwargs)
+#     if pretrained:
+#         state_dict = load_state_dict_from_url(model_urls[arch],
+#                                               progress=progress)
+#         model.load_state_dict(state_dict)
+#     return model
+
+# def _mixer(pretrained=False, **kwargs):
+#     model = MlpMixer(**kwargs)
+#     # if pretrained:
+#     #     state_dict = load_state_dict_from_url(model_urls[arch],
+#     #                                           progress=progress)
+
+# def mixer_s32_224(pretrained=False, **kwargs):
+
+import torch
+model_path = "/data/rentianhe/code/vision-mlp-oneflow/weights/torch/mixer_b16_224.pth"
+
 if __name__ == "__main__":
     test_data = flow.ones((1, 3, 224, 224), dtype=flow.float32)
-    model = MlpMixer()
-    preds = model(test_data)
-    print(preds)
+    model = MlpMixer(patch_size=16, num_blocks=12, embed_dim=768)
+    # preds = model(test_data)
+    # print(preds)
+
+    # parameters = torch.load(model_path)
+    # new_parameters = dict()
+    # for key,value in parameters.items():
+    #     if "num_batches_tracked" not in key:
+    #       val = value.detach().cpu().numpy()
+    #       new_parameters[key] = val
+    # model.load_state_dict(new_parameters)
+    # flow.save(model.state_dict(), "/data/rentianhe/code/vision-mlp-oneflow/weights/flow/mixer_b16_224.of")
+    state_dict = flow.load("/data/rentianhe/code/vision-mlp-oneflow/weights/flow/mixer_b16_224.of")
+    model.load_state_dict(state_dict)
